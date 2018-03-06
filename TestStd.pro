@@ -8,9 +8,11 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    bdbase.cpp
+    MyDb.cpp
 
 HEADERS += \
-    bdbase.h
+    MyDb.h
+LIBS +=
 
 
+unix|win32: LIBS += -ldb_cxx
