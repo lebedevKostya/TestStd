@@ -11,7 +11,8 @@ SOURCES += main.cpp \
     MyDb.cpp
 
 HEADERS += \
-    MyDb.h
+    MyDb.h \
+    EventData.h
 LIBS +=
 
 
