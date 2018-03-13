@@ -1,0 +1,31 @@
+#ifndef EVENT_H
+#define EVENT_H
+#include <QtCore/QBuffer>
+#include <QtCore/QDateTime>
+#include <QtCore/QVariant>
+
+
+struct Event {
+        QByteArray eventId_;
+        QDateTime time_;
+        QString message_;
+        quint16 severity_;
+        QString sourceName_;
+        QString type_;
+        QString conditionName_;
+        bool activeStateId_;
+        bool ackedStateId_;
+        QString clientUserId_;
+        QVariant value_;
+        QString comment_;
+        QString algorithm_;
+        QString responsible_;
+        QString sourceNode_;
+        QDateTime transitionTime_;
+        QDateTime deviceTime_;
+        QString effectiveDisplayName_;
+
+
+};
+
+#endif // EVENT_H

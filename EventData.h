@@ -5,6 +5,8 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QVariant>
 
+#include <cstdlib>
+#include <cstring>
 
 #endif // EVENTDATA
 
@@ -30,6 +32,8 @@ private:
     QDateTime transitionTime_;
     QDateTime deviceTime_;
     QString effectiveDisplayName_;
+
+
     size_t bufLen_;
     char databuf_[700];
 
@@ -81,32 +85,97 @@ public:
 
      void clear()
      {
+         QDateTime time;
+
          eventId_ = 0 ;
-         time_ = 0 ;
+         time_ = time.currentDateTime();
          message_ = "";
          severity_ = 0;
          sourceName_ = "";
-         QString type_ = "";
-         QString conditionName_ = "";
-         bool activeStateId_ = false;
-         bool ackedStateId_ = false;
+         type_ = "";
+         conditionName_ = "";
+         activeStateId_ = false;
+         ackedStateId_ = false;
          clientUserId_= "";
          value_ = "";
          comment_ = "";
          algorithm_ = "";
          responsible_ = "";
          sourceNode_ = "";
-         transitionTime_ = 0;
-         deviceTime_ = 0;
+         transitionTime_ =time.currentDateTime();
+         deviceTime_ = time.currentDateTime();
          effectiveDisplayName_ = "";
 
      }
 
-
+    // Default constructor
     EventData()
     {
         clear();
     }
+
+    // Constructor from a void *
+    // For use with the data returned from a bdb get
+    EventData(void *buffer)
+        {
+            char *buf = (char *)buffer;
+
+            eventId_ = *((QByteArray *)buf);
+            bufLen_ = sizeof(QByteArray);
+
+            time_ = *((QDateTime *)(buf + bufLen_));
+            bufLen_ += sizeof(QDateTime);
+
+            message_= buf + bufLen_;
+            bufLen_ += message_.size() + 1;
+
+            severity_ = *((quint16 *)(buf + bufLen_));
+            bufLen_ += sizeof(quint16);
+
+            sourceName_ = buf + bufLen_;
+            bufLen_ += sourceName_.size() + 1;
+
+            type_ = buf + bufLen_;
+            bufLen_ += type_.size() + 1;
+
+            conditionName_ = buf + bufLen_;
+            bufLen_ += conditionName_.size() + 1;
+
+            activeStateId_ = *((bool *)(buf + bufLen_));
+            bufLen_ += sizeof(bool);
+
+            ackedStateId_ = *((bool *)(buf + bufLen_));
+            bufLen_ += sizeof(bool);
+
+            clientUserId_ = buf + bufLen_;
+            bufLen_ += clientUserId_.size() + 1;
+
+            value_ = *((QVariant *)(buf + bufLen_));
+            bufLen_ += sizeof(QVariant);
+
+            comment_ = buf + bufLen_;
+            bufLen_ += comment_.size() + 1;
+
+            algorithm_ = buf + bufLen_;
+            bufLen_ += algorithm_.size() + 1;
+
+            responsible_ = buf + bufLen_;
+            bufLen_ += responsible_.size() + 1;
+
+            sourceNode_ = buf + bufLen_;
+            bufLen_ += sourceNode_.size() + 1;
+
+            transitionTime_ = *((QDateTime *)(buf + bufLen_));
+            bufLen_ += sizeof(QDateTime);
+
+            deviceTime_ = *((QDateTime *)(buf + bufLen_));
+            bufLen_ += sizeof(QDateTime);
+
+            effectiveDisplayName_ = buf + bufLen_;
+            bufLen_ += effectiveDisplayName_.size() + 1;
+
+        }
+
 
 
        // Marshalls this classes data members into a single
@@ -178,15 +247,13 @@ private:
       * Utility function that appends a char * to the end of
       * the buffer.
       */
-     void
-     packString(char *buffer, QString &theString)
+     void packString(char *buffer, QString &theString)
      {
          size_t string_size = theString.size() + 1;
-         memcpy(buffer+bufLen_, theString.c_str(), string_size);
+
+         memcpy(buffer+bufLen_, theString.toStdString().c_str(), string_size);
          bufLen_ += string_size;
      }
-
-   // Maybe need method for initialize our data members
 
 
 

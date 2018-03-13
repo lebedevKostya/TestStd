@@ -1,0 +1,8 @@
+#include "event.h"
+
+Event::Event()
+{
+public:
+    inline void setEventId(QByteArray EventId){EventId_= }
+}
+

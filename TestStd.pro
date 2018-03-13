@@ -8,7 +8,8 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    MyDb.cpp
+    MyDb.cpp \
+    eventGenerator.cpp
 
 HEADERS += \
     MyDb.h \
